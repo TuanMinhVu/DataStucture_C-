@@ -1,0 +1,226 @@
+//
+//  main.cpp
+//  Assignment1
+//  Name: Tuan Minh Vu
+//  ID: 101145054
+//  Created by Vu Tuan Minh on 2018-10-05.
+//  Copyright © 2018 Vu Tuan Minh. All rights reserved.
+//
+
+#include <iostream>
+#include <fstream>
+#include <ctime>
+using namespace std;
+
+class Fighter
+{
+private:
+    string fName;
+    int  damage;
+    int strucStrength;
+public:
+    Fighter();
+    Fighter(string n, int d, int s);
+    void reduceStructure(int damage);
+    string getInfo() const;
+    string getFName() const;
+    int getDamage() const;
+    int getStrucStrength() const;
+};
+
+Fighter::Fighter() // dafault constructor
+{
+    fName = " ";
+    damage = 0;
+    strucStrength = 0;
+};
+
+Fighter::Fighter(string n, int d, int s) // parameter constructer sets name = n, damage = d, strucStrenghth = s
+{
+    fName = n;
+    damage = d;
+    strucStrength = s;
+};
+
+void Fighter::reduceStructure(int a)
+{
+    strucStrength = strucStrength - a;
+};
+
+string Fighter::getInfo() const
+{
+    return "Name: " + fName + "~~~~" + "Damage: " + to_string(damage) + "~~~~" + "Structure Strenghth: " + to_string(strucStrength);
+};
+
+int Fighter::getDamage() const
+{
+    return damage;
+};
+
+int Fighter::getStrucStrength() const
+{
+    return strucStrength;
+}
+
+
+class Carrier
+{
+private:
+    string name;
+    int maxBays;
+    Fighter* *baylist;
+    int numFighters;
+public:
+    //Carrier();
+    Carrier(string n, int m);
+    bool loadFighters(Fighter*);//add fighter to the carrier
+    Fighter* launchNextFighter();//call the figheter
+    string printInfo();
+    bool hasFighters();
+    int getCapacity() const;
+    string getName() const;
+    int getNumFighters() const;
+ };
+
+Carrier::Carrier(string n, int m)
+{
+    name = n;
+    maxBays = m;
+    numFighters = 0;
+    baylist = new Fighter* [m];
+   // for (int i = 0; i < maxBays; i++) baylist[i] = nullptr;
+};
+
+bool Carrier::loadFighters(Fighter* f) //assign a pointer f to the end of bayList array
+{
+    if(numFighters < maxBays)
+    {
+        baylist[numFighters] = f;
+        numFighters++;
+        return true;
+    }
+    else
+    {
+        return false;
+    };
+}
+
+Fighter* Carrier::launchNextFighter()
+{
+    if(baylist[0] != NULL)
+    return baylist[0];
+    else return 0;
+}
+
+string Carrier::printInfo()
+{
+    return name;
+    
+}
+
+bool Carrier::hasFighters()
+{
+    if(numFighters != 0) return true;
+    return false;
+};
+
+int Carrier::getCapacity() const
+{
+    return maxBays;
+};
+
+string Carrier::getName() const
+{
+    return name;
+};
+
+int Carrier::getNumFighters() const
+{
+    return numFighters;
+}
+
+
+
+class Battle_Simulator
+{
+private:
+    //Carrier* c1;
+    //Carrier* c2;
+    Carrier* arrayCarriers[2];
+public:
+    void loadInfo()//Carrier* c1, Carrier* c2) // simulate the battle between two carriers
+    {
+        ifstream inFile;
+        //Carrier* arrayCarriers[2] = {c1, c2};
+        inFile.open("/Users/steventumi/Desktop/Assignment1/Assignment1/shipData");
+        if(!inFile)
+        {
+            cout << "Cannot open the input file" << endl;
+        }else
+        {
+            string cName; //receive the name of carrier from the file
+            int cBayMax; // receive the bayMax from the file
+            int cNum; // receive the number of fighter from the file
+            string fName; // store the fighter's name from the file
+            int fDamage, fStrength; // store the fighter's damage and strength from the file
+  
+               for(int i=0; i < 2; i++)
+               {
+                   inFile >> cName >> cBayMax >> cNum;
+                   cout << cName << ", " << cBayMax << endl;
+                   arrayCarriers[i] = new Carrier(cName, cBayMax);
+                   for(int j=0; j < cNum; j++)
+                   {
+                       //cout << "attempting to load fighter" << endl;
+                       inFile >> fName >> fDamage >> fStrength;
+                       cout << fName << "---" << fDamage << "---" << fStrength;
+                       arrayCarriers[i]->loadFighters(new Fighter(fName, fDamage, fStrength));
+                           //cout << "Loaded fighter" <<endl;
+                   }
+               }
+        }
+       
+        inFile.close();
+    };
+    
+    void printInfo()
+    {
+        
+    };
+    
+    void battle()
+    {
+        
+    }
+        /*Carrier* turn1;
+        Carrier* turn2;
+        srand((unsigned)time(0));
+        int turn = rand() % 2;
+        if(turn == 0)
+        {
+            turn1 = c1;
+            turn2 = c2;
+        }else
+        {
+            turn1 = c2;
+            turn2 = c1;
+        };
+        while(turn1->getCapacity() != 0 || turn2->getCapacity() != 0)
+        {
+            
+        }*/
+        
+    
+    
+};
+
+
+
+
+int main() {
+    //Battle_Simulator b;
+    //Carrier* c1;
+    //Carrier* c2;
+   // b.load(c1, c2);
+    return 0;
+}
